@@ -10,6 +10,7 @@ import SwiftUI
 struct RegisterView: View {
     @State private var username = ""
     @State private var password = ""
+    @State private var isPresentingLoginView = false
 
     var body: some View {
         VStack() {
@@ -23,7 +24,7 @@ struct RegisterView: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
 
             Button(action: {
-                // Perform login action here
+                // Perform registration action here
             }) {
                 Text("Register")
                     .font(.headline)
@@ -32,9 +33,19 @@ struct RegisterView: View {
                     .background(Color.green)
                     .cornerRadius(8.0)
             }
-        }
-        .padding()
-    }
+            
+             // Replace NavigationLink with Button
+             Button(action:{self.isPresentingLoginView.toggle()}){
+                 Text("Do you have an account? Login here.")
+                     .foregroundColor(Color.blue)
+              }
+             
+         }
+           .fullScreenCover(isPresented:$isPresentingLoginView){
+               LoginView()
+           }
+         .padding()
+     }
 }
 
 struct RegisterView_Previews: PreviewProvider {
