@@ -18,10 +18,28 @@ struct KantorView: View {
     self._selectedCurrencyOut = State(initialValue: selectedCurrencyOut)
  }*/
 
- private var convertedValue: Double {
+ 
      guard let amount = Double(inputValue) else { return 0 }
+
+    @Environment(\.managedObjectContext) private var viewContext
+
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \Currency.name, ascending: true)],
+        animation: .default)
+    private var currencies: FetchedResults<Currency>
     
-     switch (selectedCurrencyIn, selectedCurrencyOut) {
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \PairValue.buy_curr?.name, ascending: true)],
+        animation: .default)
+    private var pairs: FetchedResults<PairValue>
+     
+    private var convertedValue: Double {
+        for p in pairs {
+            if p.buy_curr?.name == selectedCurrencyIn && p.sell_curr?.name == selectedCurrencyOut {
+                return amount * p.value
+            }
+        }
+     /*switch (selectedCurrencyIn, selectedCurrencyOut) {
      case ("PLN", "PLN"):
          return amount / 1
          case ("PLN", "USD"):
@@ -38,20 +56,8 @@ struct KantorView: View {
             return amount * 5.2
         default:
              fatalError("Unsupported currency")
-      }
+      }*/
   }
-
-    @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Currency.name, ascending: true)],
-        animation: .default)
-    private var currencies: FetchedResults<Currency>
-    
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \PairValue.buy_curr.name, ascending: true)],
-        animation: .default)
-    private var pairs: FetchedResults<PairValue>
     
   var body: some View {
       
