@@ -48,6 +48,11 @@ struct KantorView: View {
         animation: .default)
     private var currencies: FetchedResults<Currency>
     
+    @FetchRequest(
+        sortDescriptors: [NSSortDescriptor(keyPath: \PairValue.buy_curr.name, ascending: true)],
+        animation: .default)
+    private var pairs: FetchedResults<PairValue>
+    
   var body: some View {
       
       
