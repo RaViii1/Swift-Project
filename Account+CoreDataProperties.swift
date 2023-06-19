@@ -21,6 +21,17 @@ extension Account {
     @NSManaged public var amount: Float
     @NSManaged public var toUser: User?
     @NSManaged public var toCurrency: Currency?
+    
+    @NSManaged public var toAccount: NSSet?
+
+    public var accountArray: [Account] {
+        let set = toAccount as? Set<Account> ?? []
+        
+        return set.sorted{
+            $0.user! < $1.user!
+        }
+
+    }
 
 }
 
